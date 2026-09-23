@@ -22,3 +22,7 @@
 
 - Conjunto fechado de valores vira enum SEMPRE. Nunca magic number nem magic string solta no meio
   do codigo — nem em comparacao, nem em default, nem em parametro de teste.
+
+## Comentários no código
+
+- **Comentário só onde o código não pode falar:** uma decisão que teve alternativa, uma restrição de fora (legado, constraint do banco, bug de biblioteca) ou uma armadilha que parece bug. Nunca mais longo que o código que explica, e nunca repetindo o que o nome já diz. Vale para docstring também: uma linha, salvo quando o módulo inteiro precisa de contexto que não cabe no nome dele.
