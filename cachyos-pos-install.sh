@@ -8,7 +8,7 @@ set -euo pipefail
 REPO=(
   git base-devel flatpak github-cli
   steam lutris wine winetricks goverlay prismlauncher
-  timeshift pavucontrol-qt qemu-desktop
+  pavucontrol-qt qemu-desktop   # sem timeshift: conflita com o cachyos-snapper-support
   docker docker-compose docker-buildx
 )
 
