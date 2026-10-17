@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Pós-instalação do CachyOS. Rode como usuário normal (não root): bash cachyos-pos-install.sh
+set -euo pipefail
+[[ $EUID -eq 0 ]] && { echo "Rode sem sudo; o script pede a senha quando precisar."; exit 1; }
+
+# Repositórios oficiais + CachyOS (pacman)
+REPO=(
+  git base-devel flatpak
+  steam lutris wine winetricks goverlay prismlauncher
+  timeshift pavucontrol-qt qemu-desktop
+  docker docker-compose docker-buildx
+)
+
+# AUR (via paru)
+AUR=(
+  heroic-games-launcher-bin protonplus
+  visual-studio-code-bin jetbrains-toolbox
+  brave-bin helium-browser-bin webapp-manager
+)
+
+FLATPAK=(
+  com.github.tchx84.Flatseal
+  com.rtosta.zapzap
+  com.spotify.Client
+  io.github.kolunmi.Bazaar
+)
+
+sudo pacman -Syu --needed --noconfirm "${REPO[@]}" paru
+paru -S --needed "${AUR[@]}"   # vai pedir para revisar os PKGBUILDs do AUR
+
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install -y flathub "${FLATPAK[@]}"
+
+# Docker sem sudo (vale após relogar)
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"
+
+# Node via nvm (como no Nobara) + Claude Code
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"
+nvm install --lts
+curl -fsSL https://claude.ai/install.sh | bash
+
+echo "Pronto. Faça logout/login para o grupo docker valer."
