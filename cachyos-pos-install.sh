@@ -51,4 +51,12 @@ curl -fsSL https://claude.ai/install.sh | bash
 export PATH="$HOME/.local/bin:$PATH"
 ai-memory setup --yes
 
+# Plugins, skills e ferramentas do Claude Code
+claude plugin marketplace add DietrichGebert/ponytail
+claude plugin install ponytail@ponytail
+claude plugin install superpowers@claude-plugins-official
+npx -y skills add mattpocock/skills --skill grill-me --skill grilling -g -a claude-code -y   # grill-me chama a skill grilling
+curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+rtk init -g --auto-patch
+
 echo "Pronto. Faça logout/login para o grupo docker valer."
