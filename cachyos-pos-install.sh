@@ -5,7 +5,7 @@ set -euo pipefail
 
 # Repositórios oficiais + CachyOS (pacman)
 REPO=(
-  git base-devel flatpak
+  git base-devel flatpak github-cli
   steam lutris wine winetricks goverlay prismlauncher
   timeshift pavucontrol-qt qemu-desktop
   docker docker-compose docker-buildx
@@ -14,7 +14,7 @@ REPO=(
 # AUR (via paru)
 AUR=(
   heroic-games-launcher-bin protonplus
-  visual-studio-code-bin jetbrains-toolbox
+  visual-studio-code-bin jetbrains-toolbox git-credential-manager-bin
   brave-bin helium-browser-bin webapp-manager
 )
 
@@ -30,6 +30,10 @@ paru -S --needed "${AUR[@]}"   # vai pedir para revisar os PKGBUILDs do AUR
 
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install -y flathub "${FLATPAK[@]}"
+
+# Login do git pelo navegador, credenciais no keyring do desktop
+git-credential-manager configure
+git config --global credential.credentialStore secretservice
 
 # Docker sem sudo (vale após relogar)
 sudo systemctl enable --now docker
