@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Pós-instalação do CachyOS. Rode como usuário normal (não root): bash cachyos-pos-install.sh
+# Pós-instalação do CachyOS. Rode como usuário normal (não root):
+#   curl -fsSL https://raw.githubusercontent.com/EduardoBllc/my-utils/main/cachyos-pos-install.sh | bash
 set -euo pipefail
 [[ $EUID -eq 0 ]] && { echo "Rode sem sudo; o script pede a senha quando precisar."; exit 1; }
 
@@ -16,6 +17,7 @@ AUR=(
   heroic-games-launcher-bin protonplus
   visual-studio-code-bin jetbrains-toolbox git-credential-manager-bin
   brave-bin helium-browser-bin webapp-manager
+  ai-memory-bin
 )
 
 FLATPAK=(
@@ -26,7 +28,7 @@ FLATPAK=(
 )
 
 sudo pacman -Syu --needed --noconfirm "${REPO[@]}" paru
-paru -S --needed "${AUR[@]}"   # vai pedir para revisar os PKGBUILDs do AUR
+paru -S --needed --noconfirm --skipreview "${AUR[@]}"   # sem prompts, para rodar via curl | bash
 
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install -y flathub "${FLATPAK[@]}"
@@ -44,5 +46,9 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"
 nvm install --lts
 curl -fsSL https://claude.ai/install.sh | bash
+
+# ai-memory: serviço do usuário + hooks/MCP nos agentes (precisa rodar depois do Claude)
+export PATH="$HOME/.local/bin:$PATH"
+ai-memory setup --yes
 
 echo "Pronto. Faça logout/login para o grupo docker valer."
